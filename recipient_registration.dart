@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
 
-class RecipientRegistration extends StatelessWidget {
+class RecipientRegistration extends StatefulWidget {
+  const RecipientRegistration({super.key});
+
+  @override
+  State<RecipientRegistration> createState() => _RecipientRegistrationState();
+}
+
+class _RecipientRegistrationState extends State<RecipientRegistration> {
+  final _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
+
+  void _submitForm() {
+    if (_formKey.currentState!.validate()) {
+      // TODO: Integrate with Firebase or backend
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Recipient registered successfully!')),
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,54 +81,67 @@ class RecipientRegistration extends StatelessWidget {
                         ),
                       ],
                     ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        const Text(
-                          "Fill In Recipient Details",
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFF1E3A8A),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          const Text(
+                            "Fill In Recipient Details",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Color(0xFF1E3A8A),
+                            ),
+                            textAlign: TextAlign.center,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
-                        const SizedBox(height: 32),
+                          const SizedBox(height: 32),
 
-                        _buildTextField(
-                          controller: _nameController,
-                          hintText: "Enter full name",
-                          icon: Icons.person_outline,
-                        ),
-                        const SizedBox(height: 16),
+                          _buildTextField(
+                            controller: _nameController,
+                            hintText: "Enter full name",
+                            icon: Icons.person_outline,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Name is required';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 16),
 
-                        _buildTextField(
-                          controller: _emailController,
-                          hintText: "Enter email address",
-                          icon: Icons.email_outlined,
-                          keyboardType: TextInputType.emailAddress,
-                        ),
-                        const SizedBox(height: 32),
+                          _buildTextField(
+                            controller: _emailController,
+                            hintText: "Enter your UPM email",
+                            icon: Icons.email_outlined,
+                            keyboardType: TextInputType.emailAddress,
+                            validator: (value) {
+                              if (value == null || value.trim().isEmpty) {
+                                return 'Email is required';
+                              } else if (!value.endsWith('@upm.edu.my')) {
+                                return 'Only @upm.edu.my emails allowed';
+                              }
+                              return null;
+                            },
+                          ),
+                          const SizedBox(height: 32),
 
-                        ElevatedButton(
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Submitted')),
-                            );
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF1E3A8A),
-                            padding: const EdgeInsets.symmetric(vertical: 16),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
+                          ElevatedButton(
+                            onPressed: _submitForm,
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: const Color(0xFF1E3A8A),
+                              padding: const EdgeInsets.symmetric(vertical: 16),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            child: const Text(
+                              "Submit",
+                              style: TextStyle(fontSize: 18, color: Colors.white),
                             ),
                           ),
-                          child: const Text(
-                            "Submit",
-                            style: TextStyle(fontSize: 18, color: Colors.white),
-                          ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -128,6 +158,7 @@ class RecipientRegistration extends StatelessWidget {
     required String hintText,
     required IconData icon,
     TextInputType? keyboardType,
+    String? Function(String?)? validator,
   }) {
     return Container(
       decoration: BoxDecoration(
@@ -135,9 +166,10 @@ class RecipientRegistration extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: const Color(0xFFE2E8F0)),
       ),
-      child: TextField(
+      child: TextFormField(
         controller: controller,
         keyboardType: keyboardType,
+        validator: validator,
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(color: Colors.grey[500]),
