@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dashboard.dart';
+import 'certificates_page.dart';
+import 'register_page.dart'; // Import the RegisterPage
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -105,7 +108,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         // Email field
                         _buildTextField(
                           controller: _emailController,
-                          hintText: "Enter your email",
+                          hintText: "Enter your UPM email",
                           icon: Icons.email_outlined,
                           keyboardType: TextInputType.emailAddress,
                           obscureText: false,
@@ -132,14 +135,51 @@ class _LoginScreenState extends State<LoginScreen> {
                             },
                           ),
                         ),
+                        SizedBox(height: 16),
+
+                        // Don't have an account? Register now text
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Don't have an account? ",
+                              style: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey,
+                              ),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                // Navigate to the RegisterPage
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RegisterScreen(),
+                                  ),
+                                );
+                              },
+                              child: Text(
+                                "Register now",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xFF1E3A8A),
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                         SizedBox(height: 32),
 
-                        // Sign In button (not functional yet)
+                        // Sign In button (navigation to DashboardPage)
                         ElevatedButton(
                           onPressed: () {
-                            // TODO: Add login logic later
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Login pressed')),
+                            // Navigate to the DashboardPage
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DashboardScreen(),
+                              ),
                             );
                           },
                           style: ElevatedButton.styleFrom(
