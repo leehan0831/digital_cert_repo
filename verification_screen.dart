@@ -1,27 +1,32 @@
 import 'package:flutter/material.dart';
 
 class VerificationScreen extends StatelessWidget {
+  static const Color primaryColor = Color(0xFF1E3A8A);
+  static const Color secondaryColor = Color(0xFF3B82F6);
+  static const Color accentColor = Color(0xFF60A5FA);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Verification Dashboard"),
-        backgroundColor: Color(0xFF1E3A8A),
+        title: const Text("Verification Dashboard"),
+        backgroundColor: primaryColor,
         actions: [
           IconButton(
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
+            tooltip: 'Logout',
             onPressed: () {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Logged out')),
-              );
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(const SnackBar(content: Text('Logged out')));
             },
           ),
         ],
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0xFF1E3A8A), Color(0xFF3B82F6), Color(0xFF60A5FA)],
+            colors: [primaryColor, secondaryColor, accentColor],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -32,7 +37,7 @@ class VerificationScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   "Welcome, Admin!",
                   style: TextStyle(
                     fontSize: 28,
@@ -40,7 +45,7 @@ class VerificationScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Expanded(
                   child: GridView.count(
                     crossAxisCount: 2,
@@ -51,8 +56,9 @@ class VerificationScreen extends StatelessWidget {
                         icon: Icons.verified_user,
                         label: "Verify User Profiles",
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('User profile verification opened')),
+                          _showMessage(
+                            context,
+                            'User profile verification opened',
                           );
                         },
                       ),
@@ -60,8 +66,9 @@ class VerificationScreen extends StatelessWidget {
                         icon: Icons.file_present,
                         label: "Verify Certificates",
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Certificate verification opened')),
+                          _showMessage(
+                            context,
+                            'Certificate verification opened',
                           );
                         },
                       ),
@@ -69,18 +76,14 @@ class VerificationScreen extends StatelessWidget {
                         icon: Icons.report_gmailerrorred,
                         label: "Review Reports",
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Reports page opened')),
-                          );
+                          _showMessage(context, 'Reports page opened');
                         },
                       ),
                       _buildCard(
                         icon: Icons.history,
                         label: "Verification History",
                         onTap: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(content: Text('Viewing verification history')),
-                          );
+                          _showMessage(context, 'Viewing verification history');
                         },
                       ),
                     ],
@@ -94,6 +97,12 @@ class VerificationScreen extends StatelessWidget {
     );
   }
 
+  void _showMessage(BuildContext context, String message) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
   Widget _buildCard({
     required IconData icon,
     required String label,
@@ -101,11 +110,13 @@ class VerificationScreen extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: onTap,
-      child: Container(
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
         decoration: BoxDecoration(
           color: Colors.white.withOpacity(0.95),
           borderRadius: BorderRadius.circular(20),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.black12,
               blurRadius: 10,
@@ -113,17 +124,17 @@ class VerificationScreen extends StatelessWidget {
             ),
           ],
         ),
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(icon, size: 40, color: Color(0xFF1E3A8A)),
-            SizedBox(height: 12),
+            Icon(icon, size: 40, color: primaryColor),
+            const SizedBox(height: 12),
             Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontSize: 16,
-                color: Color(0xFF1E3A8A),
+                color: primaryColor,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
